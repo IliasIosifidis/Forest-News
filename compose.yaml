@@ -92,7 +92,7 @@ services:
     restart: unless-stopped
     logging: *default-logging
     environment:
-      ELASTICSEARCH_HOSTS: '["http://elasticsearch:9200"]'
+      ELASTICSEARCH_HOSTS: http://elasticsearch:9200
     ports:
       - "127.0.0.1:5601:5601"
     deploy:
