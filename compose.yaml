@@ -59,7 +59,7 @@ services:
     deploy:
       resources:
         limits:
-          memory: 2G
+          memory: 3G
     healthcheck:
       test: ["CMD-SHELL", "curl -fs http://localhost:9200/_cluster/health || exit 1"]
       interval: 10s
