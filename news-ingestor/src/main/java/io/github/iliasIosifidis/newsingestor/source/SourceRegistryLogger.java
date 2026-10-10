@@ -22,7 +22,7 @@ public class SourceRegistryLogger implements ApplicationRunner {
   public void run(ApplicationArguments args){
     for (NewsSource s: sources){
       s.disabledReason().ifPresentOrElse(
-              reason -> log.warn("Source '{}' DISABLES: {}", s.name(), reason),
+              reason -> log.warn("Source '{}' DISABLED: {}", s.name(), reason),
               () -> log.info("Source '{}' enabled", s.name()));
     }
     if (sources.stream().allMatch(s -> s.disabledReason().isPresent())){

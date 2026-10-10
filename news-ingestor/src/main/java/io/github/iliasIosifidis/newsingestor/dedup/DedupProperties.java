@@ -7,7 +7,5 @@ import java.time.Duration;
 
 @ConfigurationProperties(prefix = "news.dedup")
 public record DedupProperties(
-        @DefaultValue("48h")
-        Duration retention,
-        @DefaultValue("10000")
-        long maxSize) {}
+        @DefaultValue("48h") Duration retention,
+        @DefaultValue("10000") long maxSize) {}

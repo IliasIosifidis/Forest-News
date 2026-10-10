@@ -15,7 +15,7 @@ public record Article(
     if (source == null || source.isBlank()){
       throw new IllegalArgumentException("source is required");
     }
-    if (externalId == null || source.isBlank()){
+    if (externalId == null || externalId.isBlank()){
       throw new IllegalArgumentException("externalId is required");
     }
     if (title == null || title.isBlank()){
