@@ -29,6 +29,10 @@
   --color-currents-surface: rgba(236, 244, 246, 0.9);
   --color-currents-border: #c2d5d8;
   --color-currents-accent: #055462;
+
+  --color-free-surface: rgba(246, 245, 236, 0.9);
+  --color-free-border: #d8d4c2;
+  --color-free-accent: #624f05;
 }
 
 @layer base {

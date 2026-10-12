@@ -4,6 +4,7 @@ import io.github.iliasIosifidis.newsingestor.article.Article;
 import io.github.iliasIosifidis.newsingestor.dedup.SeenArticles;
 import io.github.iliasIosifidis.newsingestor.source.NewsSource;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClient;
 import org.springframework.web.util.UriBuilder;
 
@@ -14,6 +15,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Slf4j
+@Component
 public class FreeNewsSource implements NewsSource {
 
   private static final String LANGUAGE = "en";
@@ -24,7 +26,7 @@ public class FreeNewsSource implements NewsSource {
   private final RestClient restClient;
   private final String disabledReason;
 
-  public FreeNewsSource(FreeNewsProperties properties, SeenArticles seenArticles, RestClient.Builder builder, String disabledReason) {
+  public FreeNewsSource(FreeNewsProperties properties, SeenArticles seenArticles, RestClient.Builder builder) {
     this.properties = properties;
     this.seenArticles = seenArticles;
     RestClient client = null;
@@ -101,8 +103,7 @@ public class FreeNewsSource implements NewsSource {
   private java.net.URI listUri(UriBuilder uri){
     UriBuilder builder = uri.path("/news")
             .queryParam("language", LANGUAGE)
-            .queryParam("country", properties.country())
-            .queryParam("order_by", properties.topic());
+            .queryParam("country", properties.country());
     if (!properties.topic().isBlank()){
       builder.queryParam("topic", properties.topic());
     }

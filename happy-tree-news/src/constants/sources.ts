@@ -38,6 +38,14 @@ export const SOURCES: NewsSource[] = [
       accent: 'text-currents-accent',
     },
   },
+  {
+    id: 'freenews',
+    label: 'Free News',
+    theme: {
+      card: 'bg-free-surface ring-free-border',
+      accent: 'text-free-accent',
+    },
+  }
 ]
 
 const DEFAULT_THEME: SourceTheme = {
