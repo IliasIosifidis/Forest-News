@@ -23,6 +23,10 @@ public class SeenArticles {
             .putIfAbsent(article.key(), Boolean.TRUE) == null; //putIfAbsent is atomic
   }
 
+  public boolean isSeen(String key){
+    return seen.getIfPresent(key) !=null;
+  }
+
   public void forget(Article article){
     seen.invalidate(article.key());
   }

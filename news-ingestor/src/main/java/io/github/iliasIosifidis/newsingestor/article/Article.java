@@ -29,7 +29,11 @@ public record Article(
     }
   }
 
-  public String key(){
+  public static String keyOf(String source, String externalId){
     return source + ":" + externalId;
+  }
+
+  public String key(){
+    return keyOf(source, externalId);
   }
 }
