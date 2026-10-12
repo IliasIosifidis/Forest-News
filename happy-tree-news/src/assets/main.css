@@ -33,7 +33,7 @@
   --color-free-surface: rgba(246, 245, 236, 0.9);
   --color-free-border: #d8d4c2;
   --color-free-accent: #624f05;
-}
+  }
 
 @layer base {
   html {
