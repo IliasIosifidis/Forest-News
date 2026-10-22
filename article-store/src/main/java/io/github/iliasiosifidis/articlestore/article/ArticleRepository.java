@@ -29,5 +29,8 @@ public interface ArticleRepository extends JpaRepository<Article,Long> {
 
   Page<Article> findBySource(String source, Pageable pageable);
 
+  @Query("select a from Article a where a.receivedAt >= :from and a.receivedAt < :to")
+  Page<Article> findByReceivedBetween(Instant from, Instant to, Pageable pageable);
+
   Optional<Article> findBySourceAndExternalId(String source, String externalId);
 }

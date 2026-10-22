@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.time.Instant;
+
 @RestController
 @RequestMapping("/api/articles")
 class ArticleController {
@@ -23,12 +25,17 @@ class ArticleController {
 
   @GetMapping
   Page<ArticleResponse> list(
+          @RequestParam(required = false) Instant from,
+          @RequestParam(required = false) Instant to,
           @RequestParam(required = false) String source,
           @PageableDefault(
                   size = 20,
                   sort = {"publishedAt", "id"},
                   direction = Sort.Direction.DESC)
           Pageable pageable) {
+    if (from != null && to != null){
+      return repository.findByReceivedBetween(from, to, pageable).map(ArticleResponse::from);
+    }
     if (source == null || source.isBlank()){
       return repository.findAll(pageable).map(ArticleResponse::from);
     }

@@ -21,6 +21,8 @@ public class Article {
   private String url;
   private String summary;
   private Instant publishedAt;
+
+  @Column(name = "received_at", insertable = false, updatable = false)
   private Instant receivedAt;
 }
 
