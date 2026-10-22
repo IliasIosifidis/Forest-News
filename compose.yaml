@@ -103,6 +103,27 @@ services:
       elasticsearch:
         condition: service_healthy
 
+  llm:
+    image: ghcr.io/ggml-org/llama.cpp:server
+    profiles: ["llm"]
+    restart: unless-stopped
+    logging: *default-logging
+    environment:
+      LLAMA_CACHE: /models
+      LLAMA_ARG_HF_REPO: Qwen/Qwen2.5-3B-Instruct-GGUF:Q4_K_M
+      LLAMA_ARG_CTX_SIZE: "24576"
+      LLAMA_ARG_N_PARALLEL: "1"
+      LLAMA_ARG_THREADS: "4"
+    ports:
+      - "127.0.0.1:8084:8080"
+    volumes:
+      - llama-models:/models
+    deploy:
+      resources:
+        limits:
+          memory: 6G
+          cpus: "4"
+
   news-ingestor:
     build: ./news-ingestor
     profiles: ["apps"]
