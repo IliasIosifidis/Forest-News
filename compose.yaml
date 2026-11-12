@@ -221,3 +221,4 @@ volumes:
   pgdata:
   esdata:
   filebeatdata:
+  llama-models:
