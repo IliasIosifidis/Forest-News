@@ -1,7 +1,7 @@
 package io.github.iliasiosifidis.digestservice.source;
 
-import io.github.iliasiosifidis.digestservice.client.LlmClient;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.jdbc.core.simple.JdbcClient;
 import org.springframework.stereotype.Service;
 
@@ -24,14 +24,14 @@ public class DigestService {
 
   private final ArticleStoreRestClient restClient;
   private final PromptBuilder promptBuilder;
-  private final LlmClient llmClient;
   private final JdbcClient jdbc;
+  private final ChatClient chatClient;
 
-  public DigestService(ArticleStoreRestClient restClient, PromptBuilder promptBuilder, LlmClient llmClient, JdbcClient jdbc) {
+  public DigestService(ArticleStoreRestClient restClient,PromptBuilder promptBuilder,ChatClient.Builder chatClientBuilder,JdbcClient jdbc) {
     this.restClient = restClient;
     this.promptBuilder = promptBuilder;
-    this.llmClient = llmClient;
     this.jdbc = jdbc;
+    this.chatClient = chatClientBuilder.defaultSystem(PromptBuilder.SYSTEM_PROMPT).build();
   }
 
   public void createFor(LocalDate day) {
@@ -47,7 +47,10 @@ public class DigestService {
       return;
     }
 
-    String digest = llmClient.summarize(PromptBuilder.SYSTEM_PROMPT, promptBuilder.format(selected));
+    String digest = chatClient.prompt()
+                    .user(promptBuilder.format(selected))
+                    .call()
+                    .content();
 
     jdbc.sql("""
              INSERT INTO digests.digests (day, content) VALUES (:day, :content)

@@ -1,15 +1,7 @@
 package io.github.iliasiosifidis.digestservice.client;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.client.JdkClientHttpRequestFactory;
-import org.springframework.stereotype.Component;
-import org.springframework.web.client.RestClient;
-
-import java.time.Duration;
-import java.util.List;
-
+// REPLACED WITH SPRING AI (chatClient)
+/*
 @Slf4j
 @Component
 public class LlmClient {
@@ -19,6 +11,8 @@ public class LlmClient {
   public record ChatResponse(String model, List<Choice> choices) {
     public record Choice(@JsonProperty("finish_reason") String finishReason, ChatMessage message) {}
   }
+
+  public record Stories(List<String> stories) {}
 
   public record Summary(String model, List<String> stories) {}
 
@@ -52,3 +46,4 @@ public class LlmClient {
     return choice.message().content().strip();
   }
 }
+ */
