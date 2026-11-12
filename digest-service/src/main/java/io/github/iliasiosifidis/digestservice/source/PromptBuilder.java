@@ -23,9 +23,9 @@ public class PromptBuilder {
   public String format(List<ArticlePage.Item> articles){
     StringBuilder prompt = new StringBuilder(
           """
-               From the articles below, pick the 10 most important news stories.
-               For each story write 1-2 sentences. No headlines.
-               Return the stories as JSON array of strings.
+          From the articles below, pick the 10 most important news stories.
+          For each story write 1-2 sentences. No headlines.
+          Return the stories as JSON array of strings.
           """);
     for (ArticlePage.Item a : articles){
       prompt.append(a.source()).append(" | ")

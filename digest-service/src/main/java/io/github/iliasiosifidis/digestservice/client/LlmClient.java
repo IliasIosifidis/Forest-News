@@ -17,6 +17,8 @@ import java.util.Map;
 @Component
 public class LlmClient {
 
+  public record Summary(String model, List<String> stories) {}
+
   private final RestClient restClient;
   private final JsonMapper jsonMapper;
   private static final Map<String, Object> RESPONSE_FORMAT = Map.of(
@@ -41,7 +43,7 @@ public class LlmClient {
     this.jsonMapper = jsonMapper;
   }
 
-  public List<String > summarize(String systemPrompt, String userPrompt){
+  public Summary summarize(String systemPrompt, String userPrompt){
     ChatRequest request = new ChatRequest(
             List.of(new ChatMessage("system", systemPrompt), new ChatMessage("user", userPrompt)),
             0.2,
@@ -59,7 +61,7 @@ public class LlmClient {
     if (!"stop".equals(choice.finishReason())){
       throw new IllegalStateException("Model stopped early: " + choice.finishReason());
     }
-    return jsonMapper.readValue(choice.message().content(), Stories.class).stories();
-
+    Stories stories = jsonMapper.readValue(choice.message().content(), Stories.class);
+    return new Summary(response.model(), stories.stories());
   }
 }

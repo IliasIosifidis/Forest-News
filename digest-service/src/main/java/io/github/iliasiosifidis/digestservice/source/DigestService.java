@@ -1,7 +1,10 @@
 package io.github.iliasiosifidis.digestservice.source;
 
+import io.github.iliasiosifidis.digestservice.client.LlmClient;
+import io.github.iliasiosifidis.digestservice.repository.DigestRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import tools.jackson.databind.json.JsonMapper;
 
 import java.time.LocalDate;
 import java.time.ZoneId;
@@ -18,10 +21,16 @@ public class DigestService {
 
   private final ArticleStoreRestClient restClient;
   private final PromptBuilder promptBuilder;
+  private final LlmClient llmClient;
+  private final DigestRepository digestRepository;
+  private final JsonMapper jsonMapper;
 
-  public DigestService(ArticleStoreRestClient restClient, PromptBuilder promptBuilder) {
+  public DigestService(ArticleStoreRestClient restClient, PromptBuilder promptBuilder, LlmClient llmClient, DigestRepository digestRepository, JsonMapper jsonMapper) {
     this.restClient = restClient;
     this.promptBuilder = promptBuilder;
+    this.llmClient = llmClient;
+    this.digestRepository = digestRepository;
+    this.jsonMapper = jsonMapper;
   }
 
   public void createFor(LocalDate day){
@@ -30,6 +39,12 @@ public class DigestService {
     List<ArticlePage.Item> articles = restClient.fetchArticles(from.toInstant(), to.toInstant());
     List<ArticlePage.Item> selected = promptBuilder.select(articles, to.toInstant());
     String prompt = promptBuilder.format(selected);
+    LlmClient.Summary summary = llmClient.summarize(PromptBuilder.SYSTEM_PROMPT, prompt);
+    digestRepository.upsert(day,
+            jsonMapper.writeValueAsString(summary.stories()),
+            summary.model(),
+            selected.size());
+    log.info("Saved digest for {}: {} stories from {} articles", day, summary.stories().size(), selected.size());
     log.info("Digest for {}: {} articles between {} and {}", day, articles.size(), from, to);
   }
 }
