@@ -11,6 +11,7 @@ import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -52,12 +53,18 @@ public class DigestService {
                     .call()
                     .content();
 
+    String cleaned = digest.lines()
+                    .map(String::strip)
+                    .filter(line -> !line.isEmpty())
+                    .distinct()
+                    .collect(Collectors.joining("\n"));
+
     jdbc.sql("""
              INSERT INTO digests.digests (day, content) VALUES (:day, :content)
              ON CONFLICT (day) DO UPDATE SET content = EXCLUDED.content, created_at = now()
              """)
             .param("day", day)
-            .param("content", digest)
+            .param("content", cleaned)
             .update();
     log.info("Saved digest for {}", day);
   }
