@@ -206,25 +206,25 @@ services:
     restart: unless-stopped
     logging: *default-logging
     ports:
-      -"127.0.0.1:8083:8083
+      - "127.0.0.1:8083:8083"
     environment:
       SPRING_DOCKER_COMPOSE_ENABLED: "false"
       SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/news
       SPRING_DATASOURCE_USERNAME: news
       SPRING_DATASOURCE_PASSWORD: news
-      DIGEST_ARTICLE_STORE_STORE_URL: http://article-store:8081
+      DIGEST_ARTICLE_STORE_URL: http://article-store:8081
       SPRING_AI_OPENAI_BASE_URL: http://llm:8080
       JAVA_TOOL_OPTIONS: "-XX:MaxRAMPercentage=75"
-      LOGGING_STRUCTURED_FORMAT_CONCOLE: ecs
+      LOGGING_STRUCTURED_FORMAT_CONSOLE: ecs
     depends_on:
       postgres:
         condition: service_healthy
       article-store:
         condition: service_started
-      deploy:
-        resources:
-          limits:
-            memory: 512M
+    deploy:
+      resources:
+        limits:
+          memory: 512M
 
   web:
     build: ./happy-tree-news
