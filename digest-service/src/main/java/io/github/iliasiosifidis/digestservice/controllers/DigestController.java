@@ -18,6 +18,7 @@ public class DigestController {
     this.digestService = digestService;
   }
 
+  // Run manually without the Scheduler
   @PostMapping("/dev/digests/{day}")
   void create(@PathVariable LocalDate day){
     digestService.createFor(day);
