@@ -4,12 +4,16 @@ import org.springframework.stereotype.Component;
 
 import java.time.Duration;
 import java.time.Instant;
+import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Component
 public class PromptBuilder {
   private static final Duration MAX_AGE = Duration.ofHours(36);
   private static final int MAX_SUMMARY_LENGTH = 200;
+  private static final int MAX_ARTICLES = 300;
 
   public static final String SYSTEM_PROMPT =  """
           You are a news editor. You receive news articles, one per line, \\
@@ -21,8 +25,16 @@ public class PromptBuilder {
 
   public List<ArticlePage.Item> select(List<ArticlePage.Item> articles, Instant windowEnd){
     Instant oldestAllowed = windowEnd.minus(MAX_AGE);
-    return articles.stream()
+    Comparator<ArticlePage.Item> newestFirst = Comparator.comparing(ArticlePage.Item::publishedAt).reversed();
+
+    Map<String, List<ArticlePage.Item>> bySource = articles.stream()
             .filter(a -> a.publishedAt() != null && a.publishedAt().isAfter(oldestAllowed))
+            .collect(Collectors.groupingBy(ArticlePage.Item::source));
+    int perSource = MAX_ARTICLES / Math.max(1, bySource.size());
+
+    return bySource.values().stream()
+            .flatMap(list -> list.stream().sorted(newestFirst).limit(perSource))
+            .sorted(newestFirst)
             .toList();
   }
 
