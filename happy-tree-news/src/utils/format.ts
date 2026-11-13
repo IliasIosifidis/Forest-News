@@ -7,6 +7,13 @@ export function formatDate(iso: string): string {
   return dateFormatter.format(new Date(iso))
 }
 
+const dayFormatter = new Intl.DateTimeFormat(undefined, { dateStyle: 'medium' })
+
+// A calendar day such as `2026-11-13`. Read as local midnight: as UTC it could show the day before.
+export function formatDay(isoDay: string): string {
+  return dayFormatter.format(new Date(`${isoDay}T00:00`))
+}
+
 const timeFormatter = new Intl.DateTimeFormat(undefined, { timeStyle: 'medium' })
 
 // Today's entries only need the time; older ones also need the date.

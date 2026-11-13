@@ -242,6 +242,8 @@ services:
         condition: service_started
       search-service:
         condition: service_started
+      digest-service:
+        condition: service_started
 
 volumes:
   pgdata:

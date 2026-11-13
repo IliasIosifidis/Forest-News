@@ -6,7 +6,7 @@ import vueDevTools from 'vite-plugin-vue-devtools'
 import tailwindcss from '@tailwindcss/vite'
 
 // The backend sends no CORS headers, so the browser calls `/api` on the dev server and Vite forwards it.
-// The first matching prefix wins, so `/api/search` must stay above `/api`.
+// The first matching prefix wins, so the per-service prefixes must stay above `/api`.
 const apiProxy = {
   // search-service is not exposed on the live host yet; this expects it running locally.
   '/api/search': {
@@ -14,6 +14,9 @@ const apiProxy = {
   },
   '/api/activity': {
     target: 'http://localhost:8082',
+  },
+  '/api/digests': {
+    target: 'http://localhost:8083',
   },
   '/api': {
     target: 'http://localhost:8081',
