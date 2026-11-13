@@ -15,7 +15,7 @@ const options = computed(() => [{ id: null, label: 'All' }, ...props.sources])
 </script>
 
 <template>
-  <nav aria-label="News sources" class="flex flex-wrap justify-end gap-2">
+  <nav aria-label="News sources" class="flex overflow-scroll justify-end gap-2">
     <button
       v-for="option in options"
       :key="option.id ?? 'all'"
