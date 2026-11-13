@@ -23,6 +23,8 @@ processors:
                 container.name: "article-store"
             - contains:
                 container.name: "search-service"
+            - contains:
+                container.name: "digest-service"
 
 output.elasticsearch:
   hosts: ["http://elasticsearch:9200"]
