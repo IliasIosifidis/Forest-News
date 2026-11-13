@@ -15,7 +15,7 @@ public class PromptBuilder {
   private static final int MAX_SUMMARY_LENGTH = 200;
   private static final int MAX_ARTICLES = 300;
 
-  public static final String SYSTEM_PROMPT =  """
+  public static final String SYSTEM_PROMPT = """
           You are a news editor. You receive news articles, one per line, \\
           in the format: source | title | summary.
           Pick the 10 most important news stories and write 1-2 sentences about each.
@@ -23,7 +23,7 @@ public class PromptBuilder {
           Use only the articles provided. Never add facts that are not in them.
           """;
 
-  public List<ArticlePage.Item> select(List<ArticlePage.Item> articles, Instant windowEnd){
+  public List<ArticlePage.Item> select(List<ArticlePage.Item> articles, Instant windowEnd) {
     Instant oldestAllowed = windowEnd.minus(MAX_AGE);
     Comparator<ArticlePage.Item> newestFirst = Comparator.comparing(ArticlePage.Item::publishedAt).reversed();
 
@@ -38,22 +38,23 @@ public class PromptBuilder {
             .toList();
   }
 
-  public String format(List<ArticlePage.Item> articles){
+  public String format(List<ArticlePage.Item> articles) {
     StringBuilder prompt = new StringBuilder();
-    for (ArticlePage.Item a : articles){
+    for (ArticlePage.Item a : articles) {
       prompt.append(a.source()).append(" | ")
-            .append(a.title()).append(" | ")
-            .append(clean(a.summary())).append("\n");
+              .append(a.title()).append(" | ")
+              .append(clean(a.summary())).append("\n");
     }
+    prompt.append("\nNow write exactly 10 lines, one per distinct news event. No introduction, no repeats.");
     return prompt.toString();
   }
 
-  private String clean(String summary){
-    if (summary == null){
+  private String clean(String summary) {
+    if (summary == null) {
       return "";
     }
     String text = summary.replaceAll("<[^>]*>", "").replaceAll("\\s+", " ").strip();
-    if (text.length() > MAX_SUMMARY_LENGTH){
+    if (text.length() > MAX_SUMMARY_LENGTH) {
       return text.substring(0, MAX_SUMMARY_LENGTH) + "...";
     }
     return text;
