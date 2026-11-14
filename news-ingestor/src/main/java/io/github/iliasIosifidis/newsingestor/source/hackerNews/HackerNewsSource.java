@@ -12,8 +12,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
-import static org.springframework.web.client.RestClient.builder;
-
 @Slf4j
 @Component
 public class HackerNewsSource implements NewsSource {
@@ -28,7 +26,7 @@ public class HackerNewsSource implements NewsSource {
     RestClient restClient = null;
     if (reason == null) {
       try {
-        restClient = builder().baseUrl(properties.baseUrl()).build();
+        restClient = builder.baseUrl(properties.baseUrl()).build();
       } catch (RuntimeException e) {
         reason = "invalid base URL: " + e.getMessage();
       }

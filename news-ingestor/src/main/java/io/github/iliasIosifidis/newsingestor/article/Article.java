@@ -19,7 +19,7 @@ public record Article(
       throw new IllegalArgumentException("externalId is required");
     }
     if (title == null || title.isBlank()){
-      throw new IllegalArgumentException("url is required");
+      throw new IllegalArgumentException("title is required");
     }
     if (url == null || url.isBlank()){
       throw new IllegalArgumentException("url is required");

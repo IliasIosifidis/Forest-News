@@ -111,4 +111,21 @@ class GuardianSourceTest {
     assertThat(article.publishedAt()).isEqualTo(Instant.parse("2026-10-03T10:00:00Z"));
     server.verify();
   }
+
+  @Test
+  void disablesItselfWhenTheApiKeyIsMissing() {
+    assertThat(sourceWith("", BASE_URL).disabledReason()).isPresent();
+  }
+
+  @Test
+  void disablesItselfWhenTheBaseUrlIsMalformed() {
+    assertThat(sourceWith("test-key", "http://[not-a-host").disabledReason()).isPresent();
+  }
+
+  @Test
+  void aDisabledSourceRefusesToFetch() {
+    GuardianSource source = sourceWith("", BASE_URL);
+
+    assertThatThrownBy(source::fetchLatest).isInstanceOf(IllegalStateException.class);
+  }
 }
