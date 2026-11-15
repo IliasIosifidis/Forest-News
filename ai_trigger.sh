@@ -18,5 +18,4 @@ star=$(date +%s)
 curl -sS --fail -X POST "http://localhost:8083/dev/digests/$day"
 
 echo "Done in $(( $(date +%s) - start )) seconds."
-echo
-./postgres.sh -At -c "SELECT content FROM digests.digests WHERE day = '$day';"
+echo ./postgres.sh -At -c "SELECT content FROM digests.digests WHERE day = '$day';"
