@@ -125,6 +125,7 @@ services:
           cpus: "4"
 
   news-ingestor:
+    image: ghcr.io/iliasiosifidis/news-ingestor:${IMAGE_TAG:-latest}
     build: ./news-ingestor
     profiles: ["apps"]
     restart: unless-stopped
@@ -149,6 +150,7 @@ services:
           memory: 512M
   
   search-service:
+    image: ghcr.io/iliasiosifidis/search-service:${IMAGE_TAG:-latest}
     build: ./search-service
     profiles: ["apps"]
     restart: unless-stopped
@@ -175,6 +177,7 @@ services:
         condition: service_started
 
   article-store:
+    image: ghcr.io/iliasiosifidis/article-store:${IMAGE_TAG:-latest}
     build: ./article-store
     profiles: ["apps"]
     restart: unless-stopped
@@ -201,6 +204,7 @@ services:
           memory: 512M
 
   digest-service:
+    image: ghcr.io/iliasiosifidis/digest-service:${IMAGE_TAG:-latest}
     build: ./digest-service
     profiles: ["apps"]
     restart: unless-stopped
@@ -227,6 +231,7 @@ services:
           memory: 512M
 
   web:
+    image: ghcr.io/iliasiosifidis/happy-tree-news:${IMAGE_TAG:-latest}
     build: ./happy-tree-news
     profiles: ["apps"]
     restart: unless-stopped
