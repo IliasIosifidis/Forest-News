@@ -6,7 +6,7 @@ x-logging: &default-logging
 
 services:
   rabbitmq:
-    image: rabbitmq:4-management
+    image: rabbitmq:4.4.0-management
     restart: unless-stopped
     logging: *default-logging
     ports:
@@ -23,7 +23,7 @@ services:
           memory: 1G
 
   postgres:
-    image: postgres:17
+    image: postgres:17.12
     restart: unless-stopped
     logging: *default-logging
     environment:
@@ -110,7 +110,7 @@ services:
     logging: *default-logging
     environment:
       LLAMA_CACHE: /models
-      LLAMA_ARG_HF_REPO: Qwen/Qwen2.5-3B-Instruct-GGUF:Q4_K_M
+      LLAMA_ARG_HF_REPO: bartowski/Qwen2.5-7B-Instruct-GGUF:Q4_K_M
       LLAMA_ARG_CTX_SIZE: "24576"
       LLAMA_ARG_N_PARALLEL: "1"
       LLAMA_ARG_THREADS: "4"
@@ -121,7 +121,7 @@ services:
     deploy:
       resources:
         limits:
-          memory: 6G
+          memory: 9G
           cpus: "4"
 
   news-ingestor:
@@ -218,6 +218,7 @@ services:
       SPRING_DATASOURCE_PASSWORD: news
       DIGEST_ARTICLE_STORE_URL: http://article-store:8081
       SPRING_AI_OPENAI_BASE_URL: http://llm:8080
+      SPRING_AI_OPENAI_TIMEOUT: 45m
       JAVA_TOOL_OPTIONS: "-XX:MaxRAMPercentage=75"
       LOGGING_STRUCTURED_FORMAT_CONSOLE: ecs
     depends_on:
