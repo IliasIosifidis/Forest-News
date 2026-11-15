@@ -34,7 +34,7 @@ public class Backfill implements ApplicationRunner {
         return;
       } catch (RuntimeException e){
         log.error("Backfill failed, the index may be incomplete: {}", e.getMessage());
-        sleepQuietly(Duration.ofSeconds(10));
+        sleepQuietly(props.retryDelay());
       }
     }
     log.error("Backfill gave up after 5 attempts, the index may be incomplete until the next restart");
