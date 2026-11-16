@@ -25,6 +25,8 @@ processors:
                 container.name: "search-service"
             - contains:
                 container.name: "digest-service"
+            - contains:
+                container.name: "web"
 
 output.elasticsearch:
   hosts: ["http://elasticsearch:9200"]
