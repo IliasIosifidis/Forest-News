@@ -170,6 +170,12 @@ services:
       SEARCH_BACKFILL_ARTICLE_STORE_URL: http://article-store:8081
       JAVA_TOOL_OPTIONS: "-XX:MaxRAMPercentage=75"
       LOGGING_STRUCTURED_FORMAT_CONSOLE: ecs
+    healthcheck:
+      test: ["CMD", "curl", "-fs", "http://localhost:8082/actuator/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 40s
     deploy:
       resources:
         limits:
@@ -199,6 +205,12 @@ services:
       SERVER_FORWARD_HEADERS_STRATEGY: framework
       JAVA_TOOL_OPTIONS: "-XX:MaxRAMPercentage=75"
       LOGGING_STRUCTURED_FORMAT_CONSOLE: ecs
+    healthcheck:
+      test: ["CMD", "curl", "-fs", "http://localhost:8081/actuator/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 40s
     depends_on:
       rabbitmq:
         condition: service_healthy
@@ -227,6 +239,12 @@ services:
       SPRING_AI_OPENAI_TIMEOUT: 45m
       JAVA_TOOL_OPTIONS: "-XX:MaxRAMPercentage=75"
       LOGGING_STRUCTURED_FORMAT_CONSOLE: ecs
+    healthcheck:
+      test: ["CMD", "curl", "-fs", "http://localhost:8083/actuator/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 40s
     depends_on:
       postgres:
         condition: service_healthy

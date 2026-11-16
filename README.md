@@ -1,6 +1,6 @@
 # Forest News
 
-[![CI](https://github.com/IliasIosifidis/news-aggregator/actions/workflows/ci.yml/badge.svg)](https://github.com/IliasIosifidis/news-aggregator/actions/workflows/ci.yml)
+[![CI]](https://github.com/IliasIosifidis/Forest-News/actions/workflows/ci.yml)
 
 **Live demo:** [forest-news.onca-pierce.ts.net](https://forest-news.onca-pierce.ts.net/) ·
 [API docs (Swagger UI)](https://forest-news.onca-pierce.ts.net/swagger-ui/index.html)
