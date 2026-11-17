@@ -200,6 +200,7 @@ bound to localhost only. Public HTTPS traffic arrives through a **Tailscale Funn
 nginx, so no inbound ports are open on the network; administration happens over SSH inside the
 private tailnet. Small scripts cover the routine tasks: deploying, opening a database shell,
 readable container logs, a Kibana tunnel, and regenerating a day's digest.
+PostgreSQL is backed up nightly with `pg_dump`, kept for 14 days, copied off the server, and restores have been tested.
 
 ## Known trade-offs
 
@@ -217,7 +218,7 @@ readable container logs, a Kibana tunnel, and regenerating a day's digest.
 ## Roadmap
 
 - Automated deployment after a green build (continuous deployment)
-- Server setup as code (Ansible), with scheduled and tested PostgreSQL backups
+- Server setup as code (Ansible)
 - Metrics and alerting (Micrometer, Prometheus, Grafana)
 - Publisher confirms, for guaranteed delivery to the broker
 - Correlation IDs / distributed tracing across the services
@@ -225,4 +226,4 @@ readable container logs, a Kibana tunnel, and regenerating a day's digest.
 - Detection of near-duplicate stories across sources
 - Log retention policy, non-root containers, health endpoints
 
-See the [open issues](https://github.com/IliasIosifidis/news-aggregator/issues) for details.
+See the [open issues](https://github.com/IliasIosifidis/Forest-News/issues) for details.
