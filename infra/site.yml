@@ -1,0 +1,27 @@
+- name: Forest News server
+  hosts: forest
+  become: true
+  tasks:
+    - name: Base packages are installed
+      ansible.builtin.apt:
+        name:
+          - git
+          - curl
+          - jq
+        state: present
+
+    - name: Nightly database backup is scheduled
+      ansible.builtin.cron:
+        name: forest-news db backup
+        user: ilias
+        minute: "30"
+        hour: "3"
+        job: "/home/ilias/IdeaProjects/NewAggregator/db_backup.sh >> /home/ilias/backups/forest-news/backup.log 2>&1"
+
+    - name: BackupFolder exists
+      ansible.builtin.file:
+        path: /home/ilias/backups/forest-news
+        state: directory
+        owner: ilias
+        group: ilias
+        mode: "0750"
