@@ -201,6 +201,10 @@ nginx, so no inbound ports are open on the network; administration happens over 
 private tailnet. Small scripts cover the routine tasks: deploying, opening a database shell,
 readable container logs, a Kibana tunnel, and regenerating a day's digest.
 PostgreSQL is backed up nightly with `pg_dump`, kept for 14 days, copied off the server, and restores have been tested.
+The server's setup is code: an **Ansible** playbook (`infra/`) installs Docker and Tailscale,
+clones the repo, schedules the nightly database backup, and places the `.env`, which is stored
+in the repo encrypted with **Ansible Vault**. Rebuilding the server is one command plus a
+database restore.
 
 ## Known trade-offs
 
@@ -218,7 +222,6 @@ PostgreSQL is backed up nightly with `pg_dump`, kept for 14 days, copied off the
 ## Roadmap
 
 - Automated deployment after a green build (continuous deployment)
-- Server setup as code (Ansible)
 - Metrics and alerting (Micrometer, Prometheus, Grafana)
 - Publisher confirms, for guaranteed delivery to the broker
 - Correlation IDs / distributed tracing across the services
