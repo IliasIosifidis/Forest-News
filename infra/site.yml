@@ -1,6 +1,9 @@
 - name: Forest News server
   hosts: forest
   become: true
+  vars:
+    ubuntu_codename: noble # Ubuntu 24.04; change it if the new server runs a newer version
+    app_dir: /home/ilias/IdeaProjects/NewAggregator
   tasks:
     - name: Base packages are installed
       ansible.builtin.apt:
@@ -16,7 +19,7 @@
         user: ilias
         minute: "30"
         hour: "3"
-        job: "/home/ilias/IdeaProjects/NewAggregator/db_backup.sh >> /home/ilias/backups/forest-news/backup.log 2>&1"
+        job: "{{ app_dir }}/db_backup.sh >> /home/ilias/backups/forest-news/backup.log 2>&1"
 
     - name: BackupFolder exists
       ansible.builtin.file:
@@ -25,3 +28,82 @@
         owner: ilias
         group: ilias
         mode: "0750"
+
+    - name: Docker's signing key is present
+      ansible.builtin.get_url:
+        url: https://download.docker.com/linux/ubuntu/gpg
+        dest: /etc/apt/keyrings/docker.asc
+        mode: "0644"
+        checksum: "sha256:1500c1f56fa9e26b9b8f42452a553675796ade0807cdce11975eb98170b3a570"
+
+    - name: Docker's apt repository is configured
+      ansible.builtin.apt_repository:
+        repo: "deb [arch=amd64 signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu {{ ubuntu_codename }} stable"
+        filename: docker
+        state: present
+
+    - name: Docker is installed
+      ansible.builtin.apt:
+        name:
+          - docker-ce
+          - docker-ce-cli
+          - containerd.io
+          - docker-buildx-plugin
+          - docker-compose-plugin
+        state: present
+        update_cache: true
+        cache_valid_time: 3600
+
+    - name: Docker starts on boot
+      ansible.builtin.service:
+        name: docker
+        state: started
+        enabled: true
+
+    - name: ilias can use Docker without sudo
+      ansible.builtin.user:
+        name: ilias
+        groups: docker
+        append: true
+
+    - name: Tailscale's signing key is present
+      ansible.builtin.get_url:
+        url: "https://pkgs.tailscale.com/stable/ubuntu/{{ ubuntu_codename }}.noarmor.gpg"
+        dest: /usr/share/keyrings/tailscale-archive-keyring.gpg
+        mode: "0644"
+        checksum: "sha256:3e03dacf222698c60b8e2f990b809ca1b3e104de127767864284e6c228f1fb39"
+
+    - name: Tailscale's apt repository is configured
+      ansible.builtin.apt_repository:
+        repo: "deb [signed-by=/usr/share/keyrings/tailscale-archive-keyring.gpg] https://pkgs.tailscale.com/stable/ubuntu {{ ubuntu_codename }} main"
+        filename: tailscale
+        state: present
+
+    - name: Tailscale is installed
+      ansible.builtin.apt:
+        name: tailscale
+        state: present
+        update_cache: true
+        cache_valid_time: 3600
+
+    - name: Tailscale starts on boot
+      ansible.builtin.service:
+        name: tailscaled
+        state: started
+        enabled: true
+
+    - name: The repo is cloned
+      ansible.builtin.git:
+        repo: https://github.com/IliasIosifidis/Forest-News.git
+        dest: "{{ app_dir }}"
+        update: false
+      become_user: ilias
+
+    - name: The .env file is in place
+      ansible.builtin.copy:
+        src: files/env.vault
+        dest: "{{ app_dir }}.env"
+        owner: ilias
+        group: ilias
+        mode: "0600"
+      diff: false
