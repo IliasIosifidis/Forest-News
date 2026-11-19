@@ -297,3 +297,4 @@ volumes:
   esdata:
   filebeatdata:
   llama-models:
+  prometheus-data:
