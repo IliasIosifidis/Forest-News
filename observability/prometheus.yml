@@ -1,0 +1,12 @@
+global:
+  scrape_interval: 15s
+
+scrape_configs:
+  - job_name: spring
+    metrics_path: /actuator/prometheus
+    static_configs:
+      - targets:
+          - news-ingestor:8080
+          - article-store:8081
+          - search-service:8082
+          - digest-service:8083

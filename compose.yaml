@@ -103,6 +103,23 @@ services:
       elasticsearch:
         condition: service_healthy
 
+  prometheus:
+    image: prom/prometheus:v3.5.0
+    profiles: [apps]
+    command:
+      - --config.file=/etc/prometheus/prometheus.yml
+      - --storage.tsdb.retention.time=15d
+    volumes:
+      - ./observability/prometheus.yml:/etc/prometheus.yml:ro
+      - prometheus-data:/prometheus
+    ports:
+      - "127.0.0.1:9090:9090"
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+
   llm:
     image: ghcr.io/ggml-org/llama.cpp:server-b12352
     profiles: ["llm"]
