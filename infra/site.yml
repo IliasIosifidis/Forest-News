@@ -2,8 +2,8 @@
   hosts: forest
   become: true
   vars:
-    ubuntu_codename: noble # Ubuntu 24.04; change it if the new server runs a newer version
-    app_dir: /home/ilias/IdeaProjects/NewAggregator
+    ubuntu_codename: resolute # Ubuntu 24.04; change it if the new server runs a newer version
+    app_dir: /home/ilias/forest-news
   tasks:
     - name: Base packages are installed
       ansible.builtin.apt:
