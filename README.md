@@ -167,9 +167,11 @@ only changes what was meant to change.
 
 ## Observability
 
-- The services log structured JSON (**ECS** format) when running in containers
-- **Filebeat** ships the containers' logs into Elasticsearch; **Kibana** is available privately,
-  through an SSH tunnel
+- The services log structured JSON (**ECS** format); **Filebeat** ships the containers' logs into
+  Elasticsearch, kept for 14 days by an index lifecycle policy; **Kibana** is available privately
+- Every service exposes metrics through **Micrometer**; **Prometheus** scrapes them every 15 seconds
+  (kept for 15 days), and **Grafana** shows them in dashboards (JVM memory, GC, threads, HTTP
+  traffic and latency per service); its data source is provisioned from the repo
 - The activity panel only shows log lines written to a dedicated `activity` logger, filtered
   server-side, so raw logs are never exposed publicly
 
@@ -222,7 +224,6 @@ database restore.
 ## Roadmap
 
 - Automated deployment after a green build (continuous deployment)
-- Metrics and alerting (Micrometer, Prometheus, Grafana)
 - Publisher confirms, for guaranteed delivery to the broker
 - Correlation IDs / distributed tracing across the services
 - Links from each digest story to its source articles
