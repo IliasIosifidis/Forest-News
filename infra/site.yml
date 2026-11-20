@@ -102,7 +102,7 @@
     - name: The .env file is in place
       ansible.builtin.copy:
         src: files/env.vault
-        dest: "{{ app_dir }}.env"
+        dest: "{{ app_dir }}/.env"
         owner: ilias
         group: ilias
         mode: "0600"
