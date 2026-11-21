@@ -10,3 +10,9 @@ scrape_configs:
           - article-store:8081
           - search-service:8082
           - digest-service:8083
+
+  - job_name: llm
+    metrics_path: /metrics
+    static_configs:
+      - targets:
+          - llm:8080
