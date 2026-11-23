@@ -1,0 +1,70 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: article-store-config
+data:                                   # plain settings: the non-secret part of your compose "environment"
+  SPRING_DOCKER_COMPOSE_ENABLED: "false"
+  SPRING_RABBITMQ_HOST: rabbitmq
+  SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/news
+  SERVER_FORWARD_HEADERS_STRATEGY: framework
+  JAVA_TOOL_OPTIONS: "-XX:MaxRAMPercentage=75"
+  LOGGING_STRUCTURED_FORMAT_CONSOLE: ecs
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: article-store
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: article-store
+  template:
+    metadata:
+      labels:
+        app: article-store
+    spec:
+      containers:
+        - name: article-store
+          image: ghcr.io/iliasiosifidis/article-store:latest
+          ports:
+            - containerPort: 8081
+          envFrom:
+            - configMapRef:
+                name: article-store-config      # every key above becomes an env variable
+          env:                                  # secrets, renamed to what Spring expects
+            - name: SPRING_DATASOURCE_USERNAME
+              valueFrom:
+                secretKeyRef: { name: postgres-credentials, key: POSTGRES_USER }
+            - name: SPRING_DATASOURCE_PASSWORD
+              valueFrom:
+                secretKeyRef: { name: postgres-credentials, key: POSTGRES_PASSWORD }
+            - name: SPRING_RABBITMQ_USERNAME
+              valueFrom:
+                secretKeyRef: { name: rabbitmq-credentials, key: RABBITMQ_DEFAULT_USER }
+            - name: SPRING_RABBITMQ_PASSWORD
+              valueFrom:
+                secretKeyRef: { name: rabbitmq-credentials, key: RABBITMQ_DEFAULT_PASS }
+          resources:
+            requests: { memory: 256Mi, cpu: 100m }   # what the scheduler reserves for it
+            limits:   { memory: 512Mi }              # the hard cap, like compose's limits
+          startupProbe:                 # "give the JVM up to 150 s to start before judging it"
+            httpGet: { path: /actuator/health/liveness, port: 8081 }
+            periodSeconds: 5
+            failureThreshold: 30
+          livenessProbe:                # "is it alive?" Failing it means Kubernetes restarts the pod
+            httpGet: { path: /actuator/health/liveness, port: 8081 }
+            periodSeconds: 10
+          readinessProbe:               # "can it take traffic?" Failing it means the Service skips the pod
+            httpGet: { path: /actuator/health/readiness, port: 8081 }
+            periodSeconds: 5
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: article-store
+spec:
+  selector:
+    app: article-store
+  ports:
+    - port: 8081

@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: whoami
+spec:
+  replicas: 5
+  selector:
+    matchLabels:
+      app: whoami          # "the pods I own are the ones labeled app=whoami"
+  template:                # the blueprint for each pod
+    metadata:
+      labels:
+        app: whoami        # each pod gets this label
+    spec:
+      containers:
+        - name: whoami
+          image: traefik/whoami:latest
+          ports:
+            - containerPort: 80
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: whoami
+spec:
+  selector:
+    app: whoami            # "send traffic to any pod labeled app=whoami"
+  ports:
+    - port: 80
+      targetPort: 80
