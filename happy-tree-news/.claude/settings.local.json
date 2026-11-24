@@ -1,0 +1,12 @@
+{
+  "permissions": {
+    "allow": [
+      "PowerShell(npm *)",
+      "PowerShell($r = curl.exe -s -m 20 \"https://asus-laptop.tail5942de.ts.net/api/articles?page=0&size=200\" | ConvertFrom-Json; Write-Output \"returned: $\\($r.content.Count\\) of $\\($r.page.totalElements\\)\"; $r.content | Group-Object source | Select-Object Name, Count; $hn = $r.content | Where-Object { $_.source -ne 'guardian' } | Select-Object -First 2; $hn | ConvertTo-Json)",
+      "PowerShell(Remove-Item *)",
+      "PowerShell($out = \"C:\\\\Users\\\\iosif\\\\AppData\\\\Local\\\\Temp\\\\claude\\\\C--Users-iosif-Desktop-Full-stack-NewAggregator-happy-tree-news\\\\96624bfe-f71a-44a6-9fa7-e7a002438339\\\\scratchpad\"; node \"$out\\\\verify.mjs\" \"${env:ProgramFiles\\(x86\\)}\\\\Microsoft\\\\Edge\\\\Application\\\\msedge.exe\" $out http://localhost:5199/)",
+      "PowerShell(npx vite --port 5199 --strictPort)",
+      "PowerShell($ok = $false; for \\($i = 0; $i -lt 20 -and -not $ok; $i++\\) { try { Invoke-WebRequest -UseBasicParsing http://localhost:5199/ -TimeoutSec 2 | Out-Null; $ok = $true } catch { Start-Sleep -Milliseconds 500 } }; Write-Output \"server up: $ok\"; $out = \"C:\\\\Users\\\\iosif\\\\AppData\\\\Local\\\\Temp\\\\claude\\\\C--Users-iosif-Desktop-Full-stack-NewAggregator-happy-tree-news\\\\96624bfe-f71a-44a6-9fa7-e7a002438339\\\\scratchpad\"; node \"$out\\\\verify.mjs\" \"${env:ProgramFiles\\(x86\\)}\\\\Microsoft\\\\Edge\\\\Application\\\\msedge.exe\" $out http://localhost:5199/)"
+    ]
+  }
+}

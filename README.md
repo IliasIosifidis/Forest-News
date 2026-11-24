@@ -222,11 +222,14 @@ database restore.
   `.env` or Docker secrets
 
 ## Roadmap
+- Alerting on the metrics (service down, dead-lettered messages, low disk), with notifications
 - Automated deployment after a green build (continuous deployment)
+- Kubernetes manifests for the stack (in progress on the `k8s` branch)
+- Non-root containers
 - Publisher confirms, for guaranteed delivery to the broker
 - Correlation IDs / distributed tracing across the services
 - Links from each digest story to its source articles
 - Detection of near-duplicate stories across sources
-- Log retention policy, non-root containers, health endpoints
+
 
 See the [open issues](https://github.com/IliasIosifidis/Forest-News/issues) for details.
