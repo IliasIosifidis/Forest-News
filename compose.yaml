@@ -29,7 +29,7 @@ services:
     environment:
       POSTGRES_DB: news
       POSTGRES_USER: news
-      POSTGRES_PASSWORD: news
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?set POSTGRES_PASSWORD in .env}
     ports:
       - "127.0.0.1:5433:5432"
     volumes:
@@ -234,7 +234,7 @@ services:
       SPRING_RABBITMQ_HOST: rabbitmq
       SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/news
       SPRING_DATASOURCE_USERNAME: news
-      SPRING_DATASOURCE_PASSWORD: news
+      SPRING_DATASOURCE_PASSWORD: ${POSTGRES_PASSWORD:?set POSTGRES_PASSWORD in .env}
       SERVER_FORWARD_HEADERS_STRATEGY: framework
       JAVA_TOOL_OPTIONS: "-XX:MaxRAMPercentage=75"
       LOGGING_STRUCTURED_FORMAT_CONSOLE: ecs
@@ -266,7 +266,7 @@ services:
       SPRING_DOCKER_COMPOSE_ENABLED: "false"
       SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/news
       SPRING_DATASOURCE_USERNAME: news
-      SPRING_DATASOURCE_PASSWORD: news
+      SPRING_DATASOURCE_PASSWORD: ${POSTGRES_PASSWORD:?set POSTGRES_PASSWORD in .env}
       DIGEST_ARTICLE_STORE_URL: http://article-store:8081
       SPRING_AI_OPENAI_BASE_URL: http://llm:8080
       SPRING_AI_OPENAI_TIMEOUT: 45m

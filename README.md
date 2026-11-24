@@ -222,7 +222,6 @@ database restore.
   `.env` or Docker secrets
 
 ## Roadmap
-
 - Automated deployment after a green build (continuous deployment)
 - Publisher confirms, for guaranteed delivery to the broker
 - Correlation IDs / distributed tracing across the services
